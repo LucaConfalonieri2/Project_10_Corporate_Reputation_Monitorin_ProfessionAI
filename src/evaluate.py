@@ -6,7 +6,7 @@ import torch
 from tqdm import tqdm
 
 # === Configurazione ===
-MODEL_PATH = "models"  # path al modello fine-tuned
+MODEL_PATH = "models/sentiment_model"  # path al modello fine-tuned
 DATA_PATH = "data/processed/train.csv"  # dati di test
 
 # === Caricamento modello/tokenizer ===
@@ -32,11 +32,11 @@ with torch.no_grad():
 
 # === Metriche ===
 accuracy = accuracy_score(labels, predictions)
-precision = precision_score(labels, predictions, average="weighted")
-recall = recall_score(labels, predictions, average="weighted")
-f1 = f1_score(labels, predictions, average="weighted")
+precision = precision_score(labels, predictions, average="weighted", zero_division=0)
+recall = recall_score(labels, predictions, average="weighted", zero_division=0)
+f1 = f1_score(labels, predictions, average="weighted", zero_division=0)
 
-print(f"\n📊 Evaluation Metrics:")
+print(f"\nEvaluation Metrics:")
 print(f"  Accuracy : {accuracy:.4f}")
 print(f"  Precision: {precision:.4f}")
 print(f"  Recall   : {recall:.4f}")

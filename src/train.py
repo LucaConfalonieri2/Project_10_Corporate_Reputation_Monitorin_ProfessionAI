@@ -14,7 +14,6 @@ tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, padding=True, truncation=T
 def tokenize(example): return tokenizer(example["text"], truncation=True, padding="max_length")
 tokenized = dataset.map(tokenize, batched=True)
 
-# Modello con 3 classi
 model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=3)
 
 # Metriche di valutazione
@@ -30,21 +29,21 @@ def compute_metrics(eval_pred):
 
 # Configurazione training
 args = TrainingArguments(
-    output_dir="./models/sentiment_model",
+    output_dir="./models/training_arg",
     evaluation_strategy="epoch",
-    save_strategy="epoch",
+    save_strategy="no",
     num_train_epochs=3,
     per_device_train_batch_size=16,
     per_device_eval_batch_size=16,
     logging_dir="./logs",
-    load_best_model_at_end=True,
+    load_best_model_at_end=False,
 )
 
 # Trainer
 trainer = Trainer(
     model=model,
     args=args,
-    train_dataset=tokenized["train"].shuffle(seed=42).select(range(10)),  # usa subset per test iniziale
+    train_dataset=tokenized["train"].shuffle(seed=42).select(range(10)),
     eval_dataset=tokenized["train"].shuffle(seed=42).select(range(100)),
     tokenizer=tokenizer,
     compute_metrics=compute_metrics,
@@ -52,4 +51,7 @@ trainer = Trainer(
 
 if __name__ == "__main__":
     trainer.train()
-    trainer.save_model("models")
+    model.save_pretrained("models/sentiment_model")
+    tokenizer.save_pretrained("models/sentiment_model")
+
+
