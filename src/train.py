@@ -1,12 +1,13 @@
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, Trainer, TrainingArguments
 from datasets import load_dataset
 import numpy as np
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
+import utils
 
-MODEL_NAME = "cardiffnlp/twitter-roberta-base-sentiment-latest"
+MODEL_NAME = utils.MODEL_NAME
 
 # Carica il dataset CSV
-dataset = load_dataset("csv", data_files={"train": "data/processed/train.csv"}, delimiter=",")
+dataset = load_dataset("csv", data_files={"train": utils.TRAIN_DATASET_PATH}, delimiter=",")
 
 # Tokenizzazione
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, padding=True, truncation=True)
@@ -22,7 +23,9 @@ def compute_metrics(eval_pred):
     preds = np.argmax(preds, axis=1)
     return {
         "accuracy": accuracy_score(labels, preds),
-        "f1": f1_score(labels, preds, average="weighted")
+        "f1": f1_score(labels, preds, average="weighted"),
+        "precision_weighted": precision_score(labels, preds, average="weighted"),
+        "recall_weighted": recall_score(labels, preds, average="weighted"),
     }
 
 # Configurazione training
@@ -41,7 +44,7 @@ args = TrainingArguments(
 trainer = Trainer(
     model=model,
     args=args,
-    train_dataset=tokenized["train"].shuffle(seed=42).select(range(1)),  # usa subset per test iniziale
+    train_dataset=tokenized["train"].shuffle(seed=42).select(range(10)),  # usa subset per test iniziale
     eval_dataset=tokenized["train"].shuffle(seed=42).select(range(100)),
     tokenizer=tokenizer,
     compute_metrics=compute_metrics,
