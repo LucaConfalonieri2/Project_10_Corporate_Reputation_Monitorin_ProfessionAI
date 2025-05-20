@@ -4,21 +4,15 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import torch
 from tqdm import tqdm
+import utils
 
-# === Configurazione ===
-MODEL_PATH = "models/sentiment_model"  # path al modello fine-tuned
-DATA_PATH = "data/processed/train.csv"  # dati di test
+model = AutoModelForSequenceClassification.from_pretrained(utils.MODEL_PATH)
+tokenizer = AutoTokenizer.from_pretrained(utils.MODEL_PATH)
 
-# === Caricamento modello/tokenizer ===
-model = AutoModelForSequenceClassification.from_pretrained(MODEL_PATH)
-tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
-
-# === Caricamento dati ===
-df = pd.read_csv(DATA_PATH, nrows=100)
+df = pd.read_csv(utils.DATASET_PATH, nrows=100)
 texts = df["text"].tolist()
 labels = df["label"].tolist()
 
-# === Inferenza ===
 model.eval()
 predictions = []
 
@@ -30,7 +24,6 @@ with torch.no_grad():
         pred = torch.argmax(probs, dim=1).item()
         predictions.append(pred)
 
-# === Metriche ===
 accuracy = accuracy_score(labels, predictions)
 precision = precision_score(labels, predictions, average="weighted", zero_division=0)
 recall = recall_score(labels, predictions, average="weighted", zero_division=0)

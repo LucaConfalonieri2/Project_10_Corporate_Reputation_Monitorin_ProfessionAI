@@ -4,17 +4,15 @@ import numpy as np
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 import utils
 
-MODEL_NAME = utils.MODEL_NAME
-
 # Carica il dataset CSV
 dataset = load_dataset("csv", data_files={"train": utils.TRAIN_DATASET_PATH}, delimiter=",")
 
 # Tokenizzazione
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, padding=True, truncation=True)
+tokenizer = AutoTokenizer.from_pretrained(utils.MODEL_NAME, padding=True, truncation=True)
 def tokenize(example): return tokenizer(example["text"], truncation=True, padding="max_length")
 tokenized = dataset.map(tokenize, batched=True)
 
-model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=3)
+model = AutoModelForSequenceClassification.from_pretrained(utils.MODEL_NAME, num_labels=3)
 
 # Metriche di valutazione
 def compute_metrics(eval_pred):
@@ -29,13 +27,12 @@ def compute_metrics(eval_pred):
 
 # Configurazione training
 args = TrainingArguments(
-    output_dir="./models/training_arg",
+    output_dir="models",
     evaluation_strategy="epoch",
     save_strategy="no",
     num_train_epochs=3,
     per_device_train_batch_size=16,
     per_device_eval_batch_size=16,
-    logging_dir="./logs",
     load_best_model_at_end=False,
 )
 
@@ -51,7 +48,7 @@ trainer = Trainer(
 
 if __name__ == "__main__":
     trainer.train()
-    model.save_pretrained("models/sentiment_model")
-    tokenizer.save_pretrained("models/sentiment_model")
+    model.save_pretrained(utils.MODEL_PATH)
+    tokenizer.save_pretrained(utils.MODEL_PATH)
 
 

@@ -1,4 +1,5 @@
 import pandas as pd
+import utils
 
 def preprocess_sentiment140(input_path, output_path):
     df = pd.read_csv(input_path, encoding="latin-1", header=None)
@@ -9,7 +10,10 @@ def preprocess_sentiment140(input_path, output_path):
     df = df[["text", "label"]]
 
     df.to_csv(output_path, index=False)
-    print(f"✅ Dati preprocessati salvati in: {output_path}")
+    print(f"Dati preprocessati salvati in: {output_path}")
 
 if __name__ == "__main__":
-    preprocess_sentiment140("data/raw/training.1600000.processed.noemoticon.csv", "data/processed/train.csv")
+    preprocess_sentiment140(utils.ORIGINAL_DATASET_PATH, utils.TRAIN_DATASET_PATH)
+
+
+
