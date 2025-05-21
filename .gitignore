@@ -1,9 +1,7 @@
-*.csv
 venv
 __pycache__
 runs
-logs
-final_model
 sentiment_model
-app.py
 .pytest_cache
+
+
