@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import torch
@@ -9,7 +8,7 @@ import utils
 model = AutoModelForSequenceClassification.from_pretrained(utils.MODEL_PATH)
 tokenizer = AutoTokenizer.from_pretrained(utils.MODEL_PATH)
 
-df = pd.read_csv(utils.DATASET_PATH, nrows=100)
+df = pd.read_csv(utils.DATASET_FILE_TEMP, nrows=100)
 texts = df["text"].tolist()
 labels = df["label"].tolist()
 

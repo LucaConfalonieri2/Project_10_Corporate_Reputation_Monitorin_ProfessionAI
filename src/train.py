@@ -1,29 +1,24 @@
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, Trainer, TrainingArguments
 from datasets import load_dataset
-import numpy as np
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 import utils
+import os
 
-# Carica il dataset CSV
-dataset = load_dataset("csv", data_files={"train": utils.TRAIN_DATASET_PATH}, delimiter=",")
+# Carica il dataset
+dataset = load_dataset("csv", data_files={"train": utils.DATASET_FILE_TEMP}, delimiter=",")
+split_dataset = dataset["train"].train_test_split(test_size=0.2, seed=42)
 
-# Tokenizzazione
-tokenizer = AutoTokenizer.from_pretrained(utils.MODEL_NAME, padding=True, truncation=True)
-def tokenize(example): return tokenizer(example["text"], truncation=True, padding="max_length")
-tokenized = dataset.map(tokenize, batched=True)
+if os.listdir(utils.MODEL_PATH)==0:
+    tokenizer = AutoTokenizer.from_pretrained(utils.MODEL_NAME, padding=True, truncation=True)
+    model = AutoModelForSequenceClassification.from_pretrained(utils.MODEL_NAME, num_labels=3)
+else:
+    tokenizer = AutoTokenizer.from_pretrained(utils.MODEL_PATH)
+    model = AutoModelForSequenceClassification.from_pretrained(utils.MODEL_PATH)
 
-model = AutoModelForSequenceClassification.from_pretrained(utils.MODEL_NAME, num_labels=3)
+def tokenize(example): 
+    return tokenizer(example["text"], truncation=True, padding="max_length")
 
-# Metriche di valutazione
-def compute_metrics(eval_pred):
-    preds, labels = eval_pred
-    preds = np.argmax(preds, axis=1)
-    return {
-        "accuracy": accuracy_score(labels, preds),
-        "f1": f1_score(labels, preds, average="weighted"),
-        "precision_weighted": precision_score(labels, preds, average="weighted"),
-        "recall_weighted": recall_score(labels, preds, average="weighted"),
-    }
+tokenized_dataset = split_dataset.map(tokenize, batched=True)
+tokenized_dataset.set_format("torch", columns=["input_ids", "attention_mask", "label"])
 
 # Configurazione training
 args = TrainingArguments(
@@ -40,15 +35,14 @@ args = TrainingArguments(
 trainer = Trainer(
     model=model,
     args=args,
-    train_dataset=tokenized["train"].shuffle(seed=42).select(range(10)),
-    eval_dataset=tokenized["train"].shuffle(seed=42).select(range(100)),
+    train_dataset=tokenized_dataset["train"],
+    eval_dataset=tokenized_dataset["test"],
     tokenizer=tokenizer,
-    compute_metrics=compute_metrics,
+    compute_metrics=utils.compute_metrics,
 )
 
 if __name__ == "__main__":
     trainer.train()
     model.save_pretrained(utils.MODEL_PATH)
     tokenizer.save_pretrained(utils.MODEL_PATH)
-
 

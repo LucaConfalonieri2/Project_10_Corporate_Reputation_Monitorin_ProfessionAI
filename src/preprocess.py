@@ -13,7 +13,7 @@ def preprocess_sentiment140(input_path, output_path):
     print(f"Dati preprocessati salvati in: {output_path}")
 
 if __name__ == "__main__":
-    preprocess_sentiment140(utils.ORIGINAL_DATASET_PATH, utils.TRAIN_DATASET_PATH)
+    preprocess_sentiment140(utils.ORIGINAL_DATASET_PATH, utils.DATASET_PATH)
 
 
 

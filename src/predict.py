@@ -1,6 +1,7 @@
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 import utils
+import os
 
 model = AutoModelForSequenceClassification.from_pretrained(utils.MODEL_PATH)
 tokenizer = AutoTokenizer.from_pretrained(utils.MODEL_PATH)
@@ -16,6 +17,5 @@ if __name__ == "__main__":
     sample = input("Testo da analizzare: ")
     label, probs = predict_sentiment(sample)
     print(f"Predizione: {label} (probabilità: {probs})")
-
 
 
