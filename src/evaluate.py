@@ -4,11 +4,14 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 import torch
 from tqdm import tqdm
 import utils
+from datetime import datetime
+import csv
+import os
 
 model = AutoModelForSequenceClassification.from_pretrained(utils.MODEL_PATH)
 tokenizer = AutoTokenizer.from_pretrained(utils.MODEL_PATH)
 
-df = pd.read_csv(utils.DATASET_FILE_TEMP, nrows=100)
+df = pd.read_csv(utils.TEST_DATASET_TEMP)
 texts = df["text"].tolist()
 labels = df["label"].tolist()
 
@@ -28,10 +31,27 @@ precision = precision_score(labels, predictions, average="weighted", zero_divisi
 recall = recall_score(labels, predictions, average="weighted", zero_division=0)
 f1 = f1_score(labels, predictions, average="weighted", zero_division=0)
 
-print(f"\nEvaluation Metrics:")
-print(f"  Accuracy : {accuracy:.4f}")
-print(f"  Precision: {precision:.4f}")
-print(f"  Recall   : {recall:.4f}")
-print(f"  F1 Score : {f1:.4f}")
+log_file = "logs/eval_log.csv"
+now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+headers = ["timestamp", "test_size", "accuracy", 
+           "precision", "recall", "f1"]
+
+row = {"timestamp": now,
+       "test_size": len(texts),
+       "accuracy": accuracy,
+       "precision": precision,
+       "recall": recall,
+       "f1": f1
+        }
+
+file_exists = os.path.isfile(log_file)
+with open(log_file, "a", newline="") as csvfile:
+    writer = csv.DictWriter(csvfile, fieldnames=headers)
+    if not file_exists:
+        writer.writeheader()
+    writer.writerow(row)
+
+
+
 
 

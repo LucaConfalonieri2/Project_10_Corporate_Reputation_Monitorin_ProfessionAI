@@ -8,7 +8,8 @@ MODEL_PATH = "models/sentiment_model"
 ORIGINAL_DATASET_FILE = "data/raw/training.1600000.processed.noemoticon.csv"
 DATASET_FILE = "data/processed/train.csv"
 PROGRESS_FILE = "data/batch_progress.txt"
-DATASET_FILE_TEMP = "data/new/new_data.csv"
+TRAIN_DATASET_TEMP = "data/new/new_train_data.csv"
+TEST_DATASET_TEMP = "data/new/new_test_data.csv"
 
 # Metriche di valutazione
 def compute_metrics(eval_pred):
@@ -21,7 +22,9 @@ def compute_metrics(eval_pred):
         "recall": recall_score(labels, preds, average="weighted"),
     }
 
-def create_batch_data(batch_size):
+# Prende batch_size esempi dal dataset principale
+# e li salva su un dataset temporaneo
+def create_batch_data(batch_size, file_name):
     df = pd.read_csv(DATASET_FILE)
 
     start = 0
@@ -40,8 +43,8 @@ def create_batch_data(batch_size):
         exit(0)
 
     # Salva batch per retraining
-    os.makedirs(os.path.dirname(DATASET_FILE_TEMP), exist_ok=True)
-    df_batch.to_csv(DATASET_FILE_TEMP, index=False)
+    os.makedirs(os.path.dirname(file_name), exist_ok=True)
+    df_batch.to_csv(file_name, index=False)
 
     # Aggiorna progress
     with open(PROGRESS_FILE, "w") as f:

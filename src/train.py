@@ -4,10 +4,10 @@ import utils
 import os
 
 # Carica il dataset
-dataset = load_dataset("csv", data_files={"train": utils.DATASET_FILE_TEMP}, delimiter=",")
+dataset = load_dataset("csv", data_files={"train": utils.TRAIN_DATASET_TEMP}, delimiter=",")
 split_dataset = dataset["train"].train_test_split(test_size=0.2, seed=42)
 
-if os.listdir(utils.MODEL_PATH)==0:
+if not os.listdir(utils.MODEL_PATH):
     tokenizer = AutoTokenizer.from_pretrained(utils.MODEL_NAME, padding=True, truncation=True)
     model = AutoModelForSequenceClassification.from_pretrained(utils.MODEL_NAME, num_labels=3)
 else:
