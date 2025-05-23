@@ -26,11 +26,20 @@ jobs:
     - name: Generate new data batch
       run: python src/batch_manager.py
 
+    - name: Login to Hugging Face
+      run: |
+        huggingface-cli login --token "$HF_TOKEN"
+      env:
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}
+
     - name: Train model
       run: python src/train.py
 
     - name: Evaluate model
       run: python src/evaluate.py
+
+    - name: Push model to Hugging Face
+      run: python src/push_model.py
 
 #    - name: Upload logs and model artifacts
 #      uses: actions/upload-artifact@v3
