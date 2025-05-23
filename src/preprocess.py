@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 import utils
 import os
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 def preprocess_sentiment140(input_path, train_output_path, test_output_path, test_size=0.2, random_state=42):
     df = pd.read_csv(input_path, encoding="latin-1", header=None)
@@ -23,6 +24,12 @@ def preprocess_sentiment140(input_path, train_output_path, test_output_path, tes
     print(f"Test salvato in: {test_output_path}")
 
 if __name__ == "__main__":
+    tokenizer = AutoTokenizer.from_pretrained(utils.MODEL_NAME, padding=True, truncation=True)
+    model = AutoModelForSequenceClassification.from_pretrained(utils.MODEL_NAME, num_labels=3)
+
+    model.save_pretrained(utils.MODEL_PATH)
+    tokenizer.save_pretrained(utils.MODEL_PATH)
+
     preprocess_sentiment140(utils.ORIGINAL_DATASET_FILE, utils.TRAIN_DATASET_FILE, utils.TEST_DATASET_FILE)
 
 

@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import os
 
+LOG_FILE = "logs/eval_log.csv"
 MODEL_NAME = "cardiffnlp/twitter-roberta-base-sentiment-latest"
 MODEL_PATH = "models/sentiment_model"
 ORIGINAL_DATASET_FILE = "data/raw/training.1600000.processed.noemoticon.csv"
@@ -11,6 +12,7 @@ TEST_DATASET_FILE = "data/processed/test.csv"
 PROGRESS_FILE = "data/batch_progress.txt"
 TRAIN_DATASET_TEMP = "data/new/new_train_data.csv"
 TEST_DATASET_TEMP = "data/new/new_test_data.csv"
+REPO_ID = "confa3452/fasttext-sentiment-it-ProfectionAI"
 
 # Metriche di valutazione
 def compute_metrics(eval_pred):

@@ -5,6 +5,6 @@ def test_prediction():
     assert response.status_code == 200
     data = response.json()
     assert "label" in data
-    assert "prob" in data
-    assert isinstance(data["prob"], list)
-    assert len(data["prob"]) == 3
+    assert "score" in data
+    assert data["score"]>=0 and data["score"]<=1
+    assert data["label"] in ["positive", "neutral", "negative"]
