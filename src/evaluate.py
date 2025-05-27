@@ -8,10 +8,12 @@ from datetime import datetime
 import csv
 import os
 
-model = AutoModelForSequenceClassification.from_pretrained(utils.MODEL_PATH)
-tokenizer = AutoTokenizer.from_pretrained(utils.MODEL_PATH)
+utils.create_batch_data(100, utils.TEST_DATASET_FILE, utils.COMM_DATASET_TEMP)
 
-df = pd.read_csv(utils.TEST_DATASET_TEMP)
+tokenizer = AutoTokenizer.from_pretrained(utils.REPO_ID)
+model = AutoModelForSequenceClassification.from_pretrained(utils.REPO_ID)
+
+df = pd.read_csv(utils.COMM_DATASET_TEMP)
 texts = df["text"].tolist()
 labels = df["label"].tolist()
 

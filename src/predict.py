@@ -1,8 +1,9 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
 from transformers import pipeline
-
-#uvicorn src.predict:app --reload
+import utils
+import pandas as pd 
+from datetime import datetime
+import csv
+import os
 
 pipe = pipeline(
     "sentiment-analysis",
@@ -10,20 +11,30 @@ pipe = pipeline(
     tokenizer="confa3452/fasttext-sentiment-it-ProfectionAI"
     )
 
-app = FastAPI(
-    title="Sentiment Analysis API",
-    description="Analizza il sentiment di un testo (0=negativo, 1=neutro, 2=positivo)",
-    version="1.0"
-)
+df = pd.read_csv(utils.TEST_DATASET_TEMP)
+texts = df["text"].tolist()
 
-class TextInput(BaseModel):
-    text: str
+results = []
+for i in range(len(texts)):
+    results.append(pipe(texts[i])[0]["label"])
 
-@app.post("/predict")
-def predict_sentiment(input: TextInput):
-    result = pipe(input.text)[0]
-    return { "label": result["label"], "score": result["score"] }
+headers = ["timestamp", "positive", "negative", "neutral"]
 
-@app.get("/")
-def root():
-    return {"message": "API Sentiment pronta"}
+row = {
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "positive": results.count("positive"),
+        "negative": results.count("negative"),
+        "neutral": results.count("neutral")
+}
+
+file_exists = os.path.isfile(utils.COMM_FILE)
+with open(utils.COMM_FILE, "a", newline="") as csvfile:
+    writer = csv.DictWriter(csvfile, fieldnames=headers)
+    if not file_exists:
+        writer.writeheader()
+    writer.writerow(row)
+
+
+
+
+
