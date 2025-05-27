@@ -5,6 +5,8 @@ from datetime import datetime
 import csv
 import os
 
+utils.create_batch_data(100, utils.TEST_DATASET_FILE, utils.COMM_DATASET_TEMP)
+
 pipe = pipeline(
     "sentiment-analysis",
     model="confa3452/fasttext-sentiment-it-ProfectionAI",

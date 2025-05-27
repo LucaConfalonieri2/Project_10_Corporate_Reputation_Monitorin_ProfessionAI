@@ -33,7 +33,7 @@ jobs:
         HF_TOKEN: ${{ secrets.HF_TOKEN }}
 
     - name: Rate the comments
-      run: python src/evaluate.py
+      run: python src/predict.py
 
     - name: Imposta URL con token
       run: |
