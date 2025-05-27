@@ -41,10 +41,3 @@ jobs:
     - name: Push model to Hugging Face
       run: python src/push_model.py
 
-#    - name: Upload logs and model artifacts
-#      uses: actions/upload-artifact@v3
-#      with:
-#        name: model-and-logs
-#        path: |
-#          models/
-#          logs/

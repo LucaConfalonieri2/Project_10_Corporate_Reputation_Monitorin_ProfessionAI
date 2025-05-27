@@ -9,8 +9,8 @@ split_dataset = dataset["train"].train_test_split(test_size=0.2, seed=42)
 
 os.makedirs(utils.MODEL_PATH, exist_ok=True)
 if not os.listdir(utils.MODEL_PATH):
-    tokenizer = AutoTokenizer.from_pretrained(utils.REPO_ID, padding=True, truncation=True)
-    model = AutoModelForSequenceClassification.from_pretrained(utils.REPO_ID, num_labels=3)
+    tokenizer = AutoTokenizer.from_pretrained(utils.REPO_ID)
+    model = AutoModelForSequenceClassification.from_pretrained(utils.REPO_ID)
 else:
     tokenizer = AutoTokenizer.from_pretrained(utils.MODEL_PATH)
     model = AutoModelForSequenceClassification.from_pretrained(utils.MODEL_PATH)

@@ -8,3 +8,7 @@ def test_prediction():
     assert "score" in data
     assert data["score"]>=0 and data["score"]<=1
     assert data["label"] in ["positive", "neutral", "negative"]
+
+
+
+
