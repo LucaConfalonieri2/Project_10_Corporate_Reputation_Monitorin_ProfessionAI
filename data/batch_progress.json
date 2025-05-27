@@ -1,4 +1,4 @@
 {
-    "data/processed/train.csv": 0,
-    "data/processed/test.csv": 200
+    "data/processed/train.csv": 500,
+    "data/processed/test.csv": 300
 }
