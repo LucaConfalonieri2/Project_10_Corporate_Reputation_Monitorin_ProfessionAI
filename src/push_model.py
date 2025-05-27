@@ -12,4 +12,3 @@ upload_folder(
     commit_message="upload automatico del modello"
 )
 
-print("Modello caricato su huggingface.")

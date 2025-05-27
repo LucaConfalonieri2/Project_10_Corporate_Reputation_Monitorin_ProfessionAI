@@ -1,0 +1,42 @@
+name: Rating comments
+
+on:
+  workflow_dispatch:
+
+jobs:
+  retrain:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Login to Hugging Face
+      run: |
+        huggingface-cli login --token "$HF_TOKEN"
+      env:
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}
+
+    - name: Rate the comments
+      run: python src/evaluate.py
+
+    - name: Commit e push
+      run: |
+        git config user.name "github-actions"
+        git config user.email "actions@github.com"
+        git add logs/comm_log.csv data/batch_progress.json
+        git commit -m "Aggiornamento file da workflow" || echo "No changes to commit"
+        git push
+
+
+
