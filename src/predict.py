@@ -38,5 +38,6 @@ with open(utils.COMM_FILE, "a", newline="") as csvfile:
 
 
 
+utils.download_folder_from_hf()
 
 

@@ -3,6 +3,11 @@ import numpy as np
 import pandas as pd
 import os
 import json
+from huggingface_hub import HfApi, snapshot_download
+
+from pathlib import Path
+
+
 
 LOG_FILE = "logs/eval_log.csv"
 COMM_FILE = "logs/comm_log.csv"
@@ -60,5 +65,45 @@ def create_batch_data(batch_size, file_in, file_out):
         data[file_in] = end
         json.dump(data, f, indent=4)
 
+
+def upload_folder_to_hf(local_folder_path = "/data", repo_id=REPO_ID):
+    """
+    Carica una cartella su un repository Hugging Face.
+
+    :param local_folder_path: Cartella da caricare.
+    :param repo_id: Nome del repository HF
+    """
+    api = HfApi()
+    print(f"Uploading '{local_folder_path}' to HF...")
+
+    api.upload_folder(
+        folder_path=local_folder_path,
+        repo_id=repo_id,
+        repo_type="model",
+        commit_message="Upload folder",
+    )
+    print("Upload completato...")
+
+def download_folder_from_hf(folder_path="logs/", local_dir = "./logs", repo_id=REPO_ID):
+    """
+    Scarica un file da Hugging Face Hub.
+
+    :folder_path: Cartella da scaricare
+    :param local_dir: Cartella locale di destinazione
+    :param repo_id: Nome del repository
+    :return: Percorso locale al file scaricato
+    """
+    print(f"Scaricando '{folder_path}' da repo '{repo_id}'...")
+
+    downloaded_path = snapshot_download(
+        repo_id=repo_id,
+        repo_type="model",
+        local_dir=local_dir,
+        local_dir_use_symlinks=False,
+        allow_patterns=[f"{folder_path}*"]
+    )
+
+    print("Download completato...")
+    return downloaded_path
 
 
