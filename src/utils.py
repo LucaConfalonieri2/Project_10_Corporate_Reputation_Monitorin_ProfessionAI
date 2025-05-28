@@ -4,10 +4,9 @@ import pandas as pd
 import os
 import json
 from huggingface_hub import HfApi, snapshot_download
+import shutil
 
 from pathlib import Path
-
-
 
 LOG_FILE = "logs/eval_log.csv"
 COMM_FILE = "logs/comm_log.csv"
@@ -82,12 +81,13 @@ def upload_folder_to_hf(local_folder_path = "logs", repo_id=REPO_ID):
         for file in files:
             full_path = os.path.join(root, file)
             # Crea il path relativo da inserire nel repo
-            relative_path = os.path.relpath(full_path, start=".")
+            relative_path = os.path.relpath(full_path, start=local_folder_path)
+            path_in_repo = os.path.join(local_folder_path, relative_path)
             # Esempio: 'logs/file1.csv'
             print(f" - Uploading {relative_path}")
             api.upload_file(
                 path_or_fileobj=full_path,
-                path_in_repo=relative_path,
+                path_in_repo=path_in_repo,
                 repo_id=repo_id,
                 repo_type="model",
                 commit_message=f"Upload {relative_path}"
@@ -106,15 +106,27 @@ def download_folder_from_hf(folder_path="logs/", local_dir = "./logs", repo_id=R
     """
     print(f"Scaricando '{folder_path}' da repo '{repo_id}'...")
 
+    tmp_dir = "./_hf_tmp_download"
+    os.makedirs(local_dir, exist_ok=True)
+
     downloaded_path = snapshot_download(
         repo_id=repo_id,
         repo_type="model",
-        local_dir=local_dir,
+        local_dir=tmp_dir,
         local_dir_use_symlinks=False,
-        allow_patterns=[f"{folder_path}*.json", f"{folder_path}*.csv"]
+        allow_patterns=[f"{folder_path}*.csv", f"{folder_path}*.json"]
     )
 
-    print("Download completato...")
-    return downloaded_path
+    # Copia solo i file .csv e .json da downloaded_path/folder_path a local_dir
+    source_path = os.path.join(downloaded_path, folder_path)
 
+    for filename in os.listdir(source_path):
+        if filename.endswith(".csv") or filename.endswith(".json"):
+            full_source = os.path.join(source_path, filename)
+            full_target = os.path.join(local_dir, filename)
+            shutil.copy2(full_source, full_target)
+            print(f" - Copiato: {filename} → {local_dir}")
+
+    print("Download completato...")
+    return local_dir
 
