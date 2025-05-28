@@ -77,6 +77,8 @@ def upload_folder_to_hf(local_folder_path = "logs", repo_id=REPO_ID):
     print(f"Uploading '{local_folder_path}' to HF...")
 
     for root, _, files in os.walk(local_folder_path):
+        if '.cache' in root:
+            continue
         for file in files:
             full_path = os.path.join(root, file)
             # Crea il path relativo da inserire nel repo
