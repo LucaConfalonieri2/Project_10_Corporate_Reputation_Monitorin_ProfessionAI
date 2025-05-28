@@ -76,12 +76,21 @@ def upload_folder_to_hf(local_folder_path = "logs", repo_id=REPO_ID):
     api = HfApi()
     print(f"Uploading '{local_folder_path}' to HF...")
 
-    api.upload_folder(
-        folder_path=local_folder_path,
-        repo_id=repo_id,
-        repo_type="model",
-        commit_message="Upload folder",
-    )
+    for root, _, files in os.walk(local_folder_path):
+        for file in files:
+            full_path = os.path.join(root, file)
+            # Crea il path relativo da inserire nel repo
+            relative_path = os.path.relpath(full_path, start=".")
+            # Esempio: 'logs/file1.csv'
+            print(f" - Uploading {relative_path}")
+            api.upload_file(
+                path_or_fileobj=full_path,
+                path_in_repo=relative_path,
+                repo_id=repo_id,
+                repo_type="model",
+                commit_message=f"Upload {relative_path}"
+            )
+
     print("Upload completato...")
 
 def download_folder_from_hf(folder_path="logs/", local_dir = "./logs", repo_id=REPO_ID):
