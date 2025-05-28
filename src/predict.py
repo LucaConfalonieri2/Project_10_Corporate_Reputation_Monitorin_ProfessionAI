@@ -5,6 +5,8 @@ from datetime import datetime
 import csv
 import os
 
+utils.download_folder_from_hf()
+
 utils.create_batch_data(100, utils.TEST_DATASET_FILE, utils.COMM_DATASET_TEMP)
 
 pipe = pipeline(
@@ -38,6 +40,6 @@ with open(utils.COMM_FILE, "a", newline="") as csvfile:
 
 
 
-utils.download_folder_from_hf()
+utils.upload_folder_to_hf()
 
 

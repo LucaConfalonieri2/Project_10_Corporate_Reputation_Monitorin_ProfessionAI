@@ -11,12 +11,12 @@ from pathlib import Path
 
 LOG_FILE = "logs/eval_log.csv"
 COMM_FILE = "logs/comm_log.csv"
+PROGRESS_FILE = "logs/batch_progress.json"
 MODEL_NAME = "cardiffnlp/twitter-roberta-base-sentiment-latest"
 MODEL_PATH = "models/sentiment_model"
 ORIGINAL_DATASET_FILE = "data/raw/training.1600000.processed.noemoticon.csv"
 TRAIN_DATASET_FILE = "data/processed/train.csv"
 TEST_DATASET_FILE = "data/processed/test.csv"
-PROGRESS_FILE = "data/batch_progress.json"
 TRAIN_DATASET_TEMP = "data/new/new_train_data.csv"
 TEST_DATASET_TEMP = "data/new/new_test_data.csv"
 COMM_DATASET_TEMP = "data/new/new_comm.csv"
