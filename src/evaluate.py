@@ -43,7 +43,7 @@ with open(utils.LOG_FILE, "a", newline="") as csvfile:
         writer.writeheader()
     writer.writerow(row)
 
-
+utils.download_folder_from_hf()
 
 
 
