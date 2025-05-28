@@ -66,7 +66,7 @@ def create_batch_data(batch_size, file_in, file_out):
         json.dump(data, f, indent=4)
 
 
-def upload_folder_to_hf(local_folder_path = "/logs", repo_id=REPO_ID):
+def upload_folder_to_hf(local_folder_path = "logs", repo_id=REPO_ID):
     """
     Carica una cartella su un repository Hugging Face.
 
