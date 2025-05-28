@@ -109,7 +109,7 @@ def download_folder_from_hf(folder_path="logs/", local_dir = "./logs", repo_id=R
         repo_type="model",
         local_dir=local_dir,
         local_dir_use_symlinks=False,
-        allow_patterns=[f"{folder_path}*"]
+        allow_patterns=[f"{folder_path}*.json", f"{folder_path}*.csv"]
     )
 
     print("Download completato...")
