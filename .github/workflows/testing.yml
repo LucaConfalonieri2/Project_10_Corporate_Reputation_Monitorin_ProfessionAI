@@ -1,4 +1,4 @@
-name: Rating comments
+name: Test  
 
 on:
   workflow_dispatch:
