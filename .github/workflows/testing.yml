@@ -10,7 +10,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-      
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -21,11 +21,5 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-#    - name: Login to Hugging Face
-#      run: |
-#        huggingface-cli login --token "$HF_TOKEN"
-#      env:
-#        HF_TOKEN: ${{ secrets.HF_TOKEN }}
-
     - name: Rate the comments
-      run: python src/predict.py
+      run: pytest tests/test_integration.py
