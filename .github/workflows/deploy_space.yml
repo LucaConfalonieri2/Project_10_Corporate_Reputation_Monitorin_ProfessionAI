@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy to Hugging Face
 
 on:
   push:
@@ -26,4 +26,4 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          python scripts/push_space.py
+          python src/push_space.py
