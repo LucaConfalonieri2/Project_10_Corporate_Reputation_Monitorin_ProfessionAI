@@ -7,7 +7,7 @@ api = HfApi()
 api.upload_folder(
     repo_id=REPO_ID,
     folder_path="spaces",
-    repo_type="space",
+    repo_type="model",
     token=os.getenv("HF_TOKEN"),
     commit_message="Deploy automatico della demo app"
 )
