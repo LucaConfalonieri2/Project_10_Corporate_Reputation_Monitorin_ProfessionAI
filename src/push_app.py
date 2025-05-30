@@ -1,11 +1,11 @@
 from huggingface_hub import HfApi
 import os
-import utils
+REPO_ID = "confa3452/fasttext-sentiment-it-ProfectionAI"
 
 api = HfApi()
 
 api.upload_folder(
-    repo_id=utils.REPO_ID,
+    repo_id=REPO_ID,
     folder_path="spaces",
     repo_type="space",
     token=os.getenv("HF_TOKEN"),
