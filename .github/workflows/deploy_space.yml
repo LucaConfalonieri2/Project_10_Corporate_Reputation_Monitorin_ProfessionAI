@@ -28,5 +28,3 @@ jobs:
         run: |
           python src/push_app.py
 
-
-          
