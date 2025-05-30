@@ -20,30 +20,26 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-
+    
+    # Genero un nuovo data batch per train e test
     - name: Generate new data batch
       run: python src/batch_manager.py
-
+    
+    # Login su HF per salvare il modello
     - name: Login to Hugging Face
       run: |
         huggingface-cli login --token "$HF_TOKEN"
       env:
         HF_TOKEN: ${{ secrets.HF_TOKEN }}
-
+    
+    # Eseguo il training del modello
     - name: Train model
       run: python src/train.py
-
+    
+      # Eseguo la valutazione del modello
     - name: Evaluate model
       run: python src/evaluate.py
-
+      
+      # Salvo il modello su HF
     - name: Push model to Hugging Face
       run: python src/push_model.py
-
-#    - name: Commit e push
-#      run: |
-#        git config user.name "github-actions"
-#        git config user.email "actions@github.com"
-#        git add logs/eval_log.csv data/batch_progress.json
-#        git commit -m "Aggiornamento file da workflow" || echo "No changes to commit"
-#        git push
-

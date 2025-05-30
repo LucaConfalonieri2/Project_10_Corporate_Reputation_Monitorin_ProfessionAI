@@ -1,5 +1,6 @@
 name: Rating comments
 
+# Eseguito manualmente
 on:
   workflow_dispatch:
 
@@ -26,6 +27,7 @@ jobs:
         huggingface-cli login --token "$HF_TOKEN"
       env:
         HF_TOKEN: ${{ secrets.HF_TOKEN }}
-
+    
+    # Esegue predict.py per valutare i commenti ricevuti e salva su HF i risultati
     - name: Rate the comments
       run: python src/predict.py

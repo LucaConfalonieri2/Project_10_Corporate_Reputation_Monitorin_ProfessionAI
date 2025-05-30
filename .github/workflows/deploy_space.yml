@@ -1,5 +1,6 @@
 name: Deploy to Hugging Face
 
+# Eseguito dopo ogni push che modifica questi file
 on:
   push:
     paths:
@@ -21,7 +22,8 @@ jobs:
 
       - name: Install huggingface_hub
         run: pip install huggingface_hub
-
+      
+      # Esegue push_app.py per salvare app.py su HF
       - name: Push app to Hugging Face Space
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
