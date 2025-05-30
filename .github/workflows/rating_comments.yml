@@ -21,11 +21,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-#    - name: Login to Hugging Face
-#      run: |
-#        huggingface-cli login --token "$HF_TOKEN"
-#      env:
-#        HF_TOKEN: ${{ secrets.HF_TOKEN }}
+    - name: Login to Hugging Face
+      run: |
+        huggingface-cli login --token "$HF_TOKEN"
+      env:
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}
 
     - name: Rate the comments
       run: python src/predict.py

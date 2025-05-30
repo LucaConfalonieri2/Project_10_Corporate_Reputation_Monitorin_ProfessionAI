@@ -39,7 +39,7 @@ with open(utils.COMM_FILE, "a", newline="") as csvfile:
     writer.writerow(row)
 
 
-
-utils.upload_folder_to_hf()
+if os.getenv("DISABLE_UPLOAD") != "1":
+    utils.upload_folder_to_hf()
 
 
