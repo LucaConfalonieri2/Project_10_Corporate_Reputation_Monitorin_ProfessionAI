@@ -3,8 +3,8 @@ import subprocess
 
 def test_batch_manager_crea_csv():
     subprocess.run(["python", "src/batch_manager.py"], check=True)
-    assert os.path.exists("data/train_batch.csv")
-    assert os.path.exists("data/test_batch.csv")
+    assert os.path.exists("data/new/new_test_data.csv")
+    assert os.path.exists("data/new/new_traing_data.csv")
 
 def test_train_crea_modello():
     subprocess.run(["python", "src/train.py"], check=True)
