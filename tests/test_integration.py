@@ -58,7 +58,9 @@ def test_predict():
     with open("logs/comm_log.csv", 'r') as f:
         old_comm_logs = f.read()
 
-    subprocess.run(["python", "src/predict.py"], check=True)
+    subprocess.run(["python", "src/predict.py"], check=True,
+        env={**os.environ, "DISABLE_UPLOAD": "1"}
+    )
 
     with open("logs/batch_progress.json", "r") as f:
         new_batch_progress = f.read()
