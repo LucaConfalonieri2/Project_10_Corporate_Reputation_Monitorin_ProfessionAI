@@ -26,4 +26,4 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          python src/push_space.py
+          python src/push_app.py
