@@ -2,6 +2,7 @@ from huggingface_hub import HfApi
 import os
 REPO_ID = "confa3452/fasttext-sentiment-it-ProfectionAI"
 
+# Carica sul HF l'app per testare il modello
 api = HfApi()
 
 api.upload_folder(

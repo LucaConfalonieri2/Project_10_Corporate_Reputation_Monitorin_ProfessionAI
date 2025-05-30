@@ -1,6 +1,7 @@
 import os
 import subprocess
 
+# Testa batch manager controllando se i file vengono creati
 def test_batch_manager():
     assert os.path.exists("data/processed/train.csv"), f"data/processed/train.csv doesn't exits"
     assert os.path.exists("data/processed/train.csv"), f"data/processed/train.csv doesn't exits"
@@ -25,7 +26,7 @@ def test_batch_manager():
     assert old_content_test != new_content_test, f"data/new/new_test_data.csv doesn't change"
     assert old_batch_progress != new_batch_progress, f"logs/batch_progress.json doesn't change"
 
-
+# Controlla la fase di training e test e il salvataggio delle metriche
 def test_train_and_test_model():
     subprocess.run(["python", "src/train.py"], check=True)
     expected_files = ["config.json", "merges.txt", "model.safetensors", 
@@ -51,7 +52,7 @@ def test_train_and_test_model():
 
     assert old_content != new_content, "Unsaved metrics in logs/eval_log.csv"
 
-
+# Controlla se la valutazione dei nuovi commenti è stata salvata.
 def test_predict():
     with open("logs/batch_progress.json", "r") as f:
         old_batch_progress = f.read()

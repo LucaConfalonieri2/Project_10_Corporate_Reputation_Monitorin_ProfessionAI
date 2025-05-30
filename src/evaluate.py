@@ -8,13 +8,16 @@ from datetime import datetime
 import csv
 import os
 
+# Carica il modello in locale appena addestrato
 tokenizer = AutoTokenizer.from_pretrained(utils.MODEL_PATH)
 model = AutoModelForSequenceClassification.from_pretrained(utils.MODEL_PATH)
 
+# Carica il dataset temporaneo precedentemente creato
 df = pd.read_csv(utils.COMM_DATASET_TEMP)
 texts = df["text"].tolist()
 labels = df["label"].tolist()
 
+# Valutazione del modello
 model.eval()
 predictions = []
 headers = ["timestamp", "test_size", "accuracy", "precision", "recall", "f1"]
@@ -36,6 +39,7 @@ row = {
         "f1": f1_score(labels, predictions, average="weighted", zero_division=0)
     }
 
+# Salvataggio delle metriche
 file_exists = os.path.isfile(utils.LOG_FILE)
 with open(utils.LOG_FILE, "a", newline="") as csvfile:
     writer = csv.DictWriter(csvfile, fieldnames=headers)

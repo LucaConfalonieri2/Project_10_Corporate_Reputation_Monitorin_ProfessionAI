@@ -7,6 +7,7 @@ import os
 dataset = load_dataset("csv", data_files={"train": utils.TRAIN_DATASET_TEMP}, delimiter=",")
 split_dataset = dataset["train"].train_test_split(test_size=0.2, seed=42)
 
+# Carica il modello da locale (se presente) o da HF in caso contrario. Utile per lavorare sia con Active di git che in locale.
 os.makedirs(utils.MODEL_PATH, exist_ok=True)
 if not os.listdir(utils.MODEL_PATH):
     tokenizer = AutoTokenizer.from_pretrained(utils.REPO_ID)

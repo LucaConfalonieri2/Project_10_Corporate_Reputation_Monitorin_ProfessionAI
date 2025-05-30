@@ -4,20 +4,24 @@ from transformers import pipeline
 
 #uvicorn src.app:app --reload
 
+# Carica il modello da HF
 pipe = pipeline(
     "sentiment-analysis",
     model="confa3452/fasttext-sentiment-it-ProfectionAI",
     tokenizer="confa3452/fasttext-sentiment-it-ProfectionAI"
     )
 
+# Crea una FastAPI
 app = FastAPI(
     title="Sentiment Analysis API",
     description="Analizza il sentiment di un testo (0=negativo, 1=neutro, 2=positivo)",
     version="1.0"
 )
 
+
 class TextInput(BaseModel):
     text: str
+
 
 @app.post("/predict")
 def predict_sentiment(input: TextInput):

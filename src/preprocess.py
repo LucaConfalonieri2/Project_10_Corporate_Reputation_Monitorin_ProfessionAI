@@ -4,11 +4,12 @@ import utils
 import os
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
+# Carica il dataset originale, lo sistema e lo divide in due più piccoli (test e train)
 def preprocess_sentiment140(input_path, train_output_path, test_output_path, test_size=0.2, random_state=42):
     df = pd.read_csv(input_path, encoding="latin-1", header=None)
     df.columns = ["target", "id", "date", "flag", "user", "text"]
 
-    # Mappatura label 0, 2, 4 → 0, 1, 2
+    # Mappatura label 0, 2, 4 -> 0, 1, 2
     df["label"] = df["target"].map({0: 0, 2: 1, 4: 2})
     df = df[["text", "label"]]
 
@@ -24,6 +25,7 @@ def preprocess_sentiment140(input_path, train_output_path, test_output_path, tes
     print(f"Test salvato in: {test_output_path}")
 
 if __name__ == "__main__":
+    # Salva in locale il modello originale e sistema il dataset
     tokenizer = AutoTokenizer.from_pretrained(utils.MODEL_NAME, padding=True, truncation=True)
     model = AutoModelForSequenceClassification.from_pretrained(utils.MODEL_NAME, num_labels=3)
 

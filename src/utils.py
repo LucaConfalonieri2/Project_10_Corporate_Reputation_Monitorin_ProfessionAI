@@ -8,6 +8,7 @@ import shutil
 
 from pathlib import Path
 
+# Variabili utili ai vari file
 LOG_FILE = "logs/eval_log.csv"
 COMM_FILE = "logs/comm_log.csv"
 PROGRESS_FILE = "logs/batch_progress.json"
@@ -21,7 +22,7 @@ TEST_DATASET_TEMP = "data/new/new_test_data.csv"
 COMM_DATASET_TEMP = "data/new/new_comm.csv"
 REPO_ID = "confa3452/fasttext-sentiment-it-ProfectionAI"
 
-# Metriche di valutazione
+# Calcola le metriche di valutazione
 def compute_metrics(eval_pred):
     preds, labels = eval_pred
     preds = np.argmax(preds, axis=1)
@@ -64,7 +65,6 @@ def create_batch_data(batch_size, file_in, file_out):
         data[file_in] = end
         json.dump(data, f, indent=4)
 
-
 def upload_folder_to_hf(local_folder_path = "logs", repo_id=REPO_ID):
     """
     Carica una cartella su un repository Hugging Face.
@@ -83,7 +83,7 @@ def upload_folder_to_hf(local_folder_path = "logs", repo_id=REPO_ID):
             # Crea il path relativo da inserire nel repo
             relative_path = os.path.relpath(full_path, start=local_folder_path)
             path_in_repo = os.path.join(local_folder_path, relative_path)
-            # Esempio: 'logs/file1.csv'
+
             print(f" - Uploading {relative_path}")
             api.upload_file(
                 path_or_fileobj=full_path,
